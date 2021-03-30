@@ -199,13 +199,15 @@ void losuj_samolot(list<Plane>& samolot)
 	if (c == 1)
 	{
 		a = algorytm_losujacy(1, ROW - 2);
-		obj1.set_plane(check_number(a, samolot, 1), 0, 0, 0, 1, 65 + samolot.size());
+		a = check_number(a, samolot, 1);
+		obj1.set_plane(a, 0, 0, 0, 1, 65 + samolot.size());
 		samolot.push_back(obj1);
 	}
 	else
 	{
 		b = algorytm_losujacy(1, ROW - 2);
-		obj1.set_plane(check_number(b, samolot, 0), COL - 1, 0, 0, 0, 65 + samolot.size());
+		b = check_number(b, samolot, 0);
+		obj1.set_plane(b, COL - 1, 0, 0, 0, 65 + samolot.size());
 		samolot.push_back(obj1);
 	}
 }
@@ -216,13 +218,13 @@ int check_number(int number, list<Plane>& samolot, bool direction)
 	{
 		if (i->x == number && direction == 1)
 		{
-			number = algorytm_losujacy(1, ROW - 1);
-			check_number(number,samolot,direction);
+			number = algorytm_losujacy(1, ROW - 2);
+			number = check_number(number, samolot, direction);
 		}
 		if (i->x == number && direction == 0)
 		{
-			number = algorytm_losujacy(1, ROW - 1);
-			check_number(number, samolot, direction);
+			number = algorytm_losujacy(1, ROW - 2);
+			number = check_number(number, samolot, direction);
 		}
 	}
 	return number;
