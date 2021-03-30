@@ -122,6 +122,7 @@ void view_board(array<array<Tile, COL>, ROW>& board);
 void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot);
 int algorytm_losujacy(int beg, int end);
 int check_number(int number, list<Plane>& samolot, bool direction);
+bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
 
 int main()
 {
@@ -228,6 +229,32 @@ int check_number(int number, list<Plane>& samolot, bool direction)
 		}
 	}
 	return number;
+}
+
+bool check_neigbours(bool direction,int which_row, array<array<Tile, COL>, ROW> board)
+{
+	if (direction == 1)
+	{
+		for (int i = 2; i < 7; i++)
+		{
+			if (board[which_row  + i][COL].tile_view == ' ')
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	else
+	{
+		for (int i = 2; i < 7; i++)
+		{
+			if (board[which_row - i][COL].tile_view == ' ')
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
