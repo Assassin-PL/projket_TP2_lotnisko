@@ -119,7 +119,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
 void set_board(array<array<Tile, COL>, ROW> &board);
 void view_board(array<array<Tile, COL>, ROW>& board);
 void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot);
-void move_plain(list<Plane>& samolot, int command, char nazwa);
+void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa);
 int algorytm_losujacy(int beg, int end);
 int check_number(int number, list<Plane>& samolot, bool direction);
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
@@ -258,10 +258,11 @@ bool check_neigbours(bool direction,int which_row, array<array<Tile, COL>, ROW> 
 	}
 }
 
-void move_plain(list<Plane>& samolot, int command,char nazwa)
+void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char nazwa)
 {
 	list<Plane>::iterator wsk_plane;
 	wsk_plane = get_itterator_of_plane(samolot, nazwa);
+	board[wsk_plane->x][wsk_plane->y] = ' ';
 	if (wsk_plane->direction == 1)
 	{
 		switch (wsk_plane->command)
@@ -302,6 +303,7 @@ void move_plain(list<Plane>& samolot, int command,char nazwa)
 			break;
 		}
 	}
+	board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 }
 
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
@@ -320,6 +322,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 	char a = 'Z';
 	a = a + 2;
 	string choice;
+	list<Plane>::iterator wsk_plane;
 	do
 	{
 		cout << "\n Menu";
@@ -363,7 +366,18 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				break;
 			case 92: cout << "dupa";
 				break;
-			case '/':cout << "dupa2";
+			case '/':
+				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
+				wsk_plane->command = 2;
+				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
+				{
+					move_plain(samolot, board, choice[0]);
+					move_plain(samolot, board, choice[0]);
+				}
+				else
+				{
+					move_plain(samolot, board, choice[0]);
+				}
 				break;
 			case 'c':cout << "dupa3";
 				break;
