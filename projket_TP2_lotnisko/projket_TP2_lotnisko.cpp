@@ -75,7 +75,6 @@ public:
 		direction = flight_direction;
 		nazwa = name_of_plain;
 	}
-
 private:
 
 };
@@ -120,9 +119,11 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
 void set_board(array<array<Tile, COL>, ROW> &board);
 void view_board(array<array<Tile, COL>, ROW>& board);
 void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot);
+void move_plain(list<Plane>& samolot, int command, char nazwa);
 int algorytm_losujacy(int beg, int end);
 int check_number(int number, list<Plane>& samolot, bool direction);
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
+list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa);
 
 int main()
 {
@@ -254,6 +255,63 @@ bool check_neigbours(bool direction,int which_row, array<array<Tile, COL>, ROW> 
 			}
 		}
 		return false;
+	}
+}
+
+void move_plain(list<Plane>& samolot, int command,char nazwa)
+{
+	list<Plane>::iterator wsk_plane;
+	wsk_plane = get_itterator_of_plane(samolot, nazwa);
+	if (wsk_plane->direction == 1)
+	{
+		switch (wsk_plane->command)
+		{
+		case 0:
+			wsk_plane->x += 1;
+			break;
+		case 1:
+			wsk_plane->x += 1;
+			wsk_plane->y -= 1;
+			break;
+		case 2:
+			wsk_plane->x += 1;
+			wsk_plane->y += 1;
+			break;
+		default:
+			wsk_plane->x += 1;
+			break;
+		}
+	}
+	else
+	{
+		switch (wsk_plane->command)
+		{
+		case 0:
+			wsk_plane->x -= 1;
+			break;
+		case 1:
+			wsk_plane->x -= 1;
+			wsk_plane->y -= 1;
+			break;
+		case 2:
+			wsk_plane->x -= 1;
+			wsk_plane->y += 1;
+			break;
+		default:
+			wsk_plane->x += 1;
+			break;
+		}
+	}
+}
+
+list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
+{
+	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)
+	{
+		if (i->nazwa == nazwa)
+		{
+			return i;
+		}
 	}
 }
 
