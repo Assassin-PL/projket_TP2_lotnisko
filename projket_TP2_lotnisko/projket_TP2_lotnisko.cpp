@@ -7,7 +7,7 @@
 using namespace std;
 
 const int ROW = 10;
-const int COL = 50;
+const int COL = 100;
 const int probability = 50;
 
 class Tile
@@ -121,7 +121,7 @@ void set_board(array<array<Tile, COL>, ROW> &board);
 void view_board(array<array<Tile, COL>, ROW>& board);
 void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot);
 int algorytm_losujacy(int beg, int end);
-int check_number(int number, list<Plane>& samolot);
+int check_number(int number, list<Plane>& samolot, bool direction);
 
 int main()
 {
@@ -179,6 +179,7 @@ void view_board(array<array<Tile, COL>, ROW>& board)
 			board[i][j].print_tile();
 		}
 		cout << endl;
+		cout << endl;
 	}
 }
 
@@ -197,26 +198,31 @@ void losuj_samolot(list<Plane>& samolot)
 	c = algorytm_losujacy(0, 1);
 	if (c == 1)
 	{
-		a = algorytm_losujacy(1, ROW - 1);
-		obj1.set_plane(check_number(a,samolot), 0, 0, 0, 1, 65 + samolot.size());
+		a = algorytm_losujacy(1, ROW - 2);
+		obj1.set_plane(check_number(a, samolot, 1), 0, 0, 0, 1, 65 + samolot.size());
 		samolot.push_back(obj1);
 	}
 	else
 	{
-		b = algorytm_losujacy(1, ROW - 1);
-		obj1.set_plane(check_number(b, samolot), COL, 0, 0, 0, 65 + samolot.size());
+		b = algorytm_losujacy(1, ROW - 2);
+		obj1.set_plane(check_number(b, samolot, 0), COL - 1, 0, 0, 0, 65 + samolot.size());
 		samolot.push_back(obj1);
 	}
 }
 
-int check_number(int number, list<Plane>& samolot)
+int check_number(int number, list<Plane>& samolot, bool direction)
 {
 	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 	{
-		if (i->x == number)
+		if (i->x == number && direction == 1)
 		{
 			number = algorytm_losujacy(1, ROW - 1);
-			check_number(number,samolot);
+			check_number(number,samolot,direction);
+		}
+		if (i->x == number && direction == 0)
+		{
+			number = algorytm_losujacy(1, ROW - 1);
+			check_number(number, samolot, direction);
 		}
 	}
 	return number;
@@ -260,7 +266,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		{
 			switch (choice[1])
 			{
-			case 'e':if(algorytm_losujacy(0,100)<probability)losuj_samolot(samolot);
+			case 'e':if(algorytm_losujacy(0,100)<=probability)losuj_samolot(samolot);
 				break;
 			case 'k':
 				fill_the_board(board, samolot);
@@ -268,11 +274,11 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				break;
 			case '=':;
 				break;
-			case 92: cout << "korwin";
+			case 92: cout << "dupa";
 				break;
-			case '/':cout << "korwin";
+			case '/':cout << "dupa2";
 				break;
-			case 'c':cout << "korwin";
+			case 'c':cout << "dupa3";
 				break;
 			default: system("cls");
 				break;
