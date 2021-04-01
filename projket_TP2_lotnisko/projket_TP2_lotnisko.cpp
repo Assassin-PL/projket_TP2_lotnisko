@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <random>
 #include <list>
 #include <array>
@@ -319,8 +319,8 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
 
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
-	char a = 'Z';
-	a = a + 2;
+	//char a = 'Z';
+	//a = a + 2;
 	string choice;
 	list<Plane>::iterator wsk_plane;
 	do
@@ -335,11 +335,11 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 
 		cout << "\n <znak samolotu> / <liczba 1-9> - nakaz wzniesienia sie o podana liczbe pol";
 
-		cout << "\n <znak samolotu> " << a << " <liczba 1-9> - nakaz opadania o podana liczbe pol";
+		cout << "\n <znak samolotu> \\ <liczba 1-9> - nakaz opadania o podana liczbe pol";
 
 		cout << "\n <znak samolotu> = - lot stabilny";
 
-		cout << "\n <znak samolotu> c – anulowanie rozkazu";
+		cout << "\n <znak samolotu> c  anulowanie rozkazu";
 
 		cout << "\n Debug: p wyjscie";
 
@@ -348,9 +348,11 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
 		cin >> choice;
-		if (choice[0] == 0)
+		if (choice[0] == ' ')
 		{
-			break;
+			cout << "Nastepna tura" << endl;
+			//i w tym momencie wszystkie samoloty powinny wykonać ruch do przodu, lub tak jak jeszcze im zostało
+			//break;
 		}
 		else
 		{
@@ -362,11 +364,11 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				fill_the_board(board, samolot);
 				view_board(board);
 				break;
-			case '=':;
+			case '=':; //to niepotrzebne
 				break;
-			case 92: cout << "dupa";
+			case 92: cout << "dupa"; //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
 				break;
-			case '/':
+			case '/':                //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do wznoszenia; jeżeli samolot już ma wyznaczone opadanie, powinna się blokować taka możliwość
 				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
 				wsk_plane->command = 2;
 				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
@@ -374,12 +376,12 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 					move_plain(samolot, board, choice[0]);
 					move_plain(samolot, board, choice[0]);
 				}
-				else
+				else   //sam ruch samolotów powinien się odbywać chyba w jednym momencie, więc w tej planszy powinniśmy tylko dodawać samolotom wartości do wznoszenia
 				{
 					move_plain(samolot, board, choice[0]);
 				}
 				break;
-			case 'c':cout << "dupa3";
+			case 'c':cout << "dupa3"; //powinna być jakaś zmienna określająca ile jeszcze samolotowi zostało (może już jest). Gdy zostanie wpisane c, ta zmienna powinna być zerowana
 				break;
 			default: system("cls");
 				break;
