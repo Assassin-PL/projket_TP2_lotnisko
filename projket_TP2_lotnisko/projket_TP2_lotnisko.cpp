@@ -196,7 +196,7 @@ void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot)
 
 void losuj_samolot(list<Plane>& samolot)
 {
-	int a, b, c,d;
+	int a, b, c, d;
 	d = 0;
 	Plane obj1(0, 0, 0, 0, 0, '=');
 	c = algorytm_losujacy(0, 1);
@@ -457,6 +457,15 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
 	}
 }
 
+bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
+	list<Plane>::iterator wsk_plane;
+	ile -= '0';
+	wsk_plane = get_itterator_of_plane(samolot, nazwa);
+	if (ile > 9 || ile < 1) return 0;
+	else if (gdzie == '/' && wsk_plane->x - ile < 0) return 0;
+	else if (gdzie == '\\' && wsk_plane->x + ile > ROW - 2) return 0;
+	else return 1;
+}
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
 	string choice;
@@ -494,6 +503,11 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		}
 		else
 		{
+			while (!WpisPoprawny(samolot, choice[0],choice[1],choice[2]))
+			{
+				cout << "Niepoprawne dane. Prosze wpisac nazwe samolotu obecnego na planszy, ktory ma mozliwosc ruszenia sie o dana liczbe ruchow" << endl;
+				cin >> choice;
+			}
 			switch (choice[1])
 			{
 			case 'e':if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot);
@@ -533,6 +547,8 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 			default: system("cls");
 				break;
 			}
+			fill_the_board(board, samolot);
+			view_board(board);
 		}
 	} while (choice[0] != 112);
 }
