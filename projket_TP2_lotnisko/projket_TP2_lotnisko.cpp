@@ -124,6 +124,7 @@ void start_flight(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, cha
 int algorytm_losujacy(int beg, int end);
 int check_number(int number, list<Plane>& samolot, bool direction);
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
+char check_name(char name, list<Plane>& samolot);
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa);
 
 int main()
@@ -203,14 +204,14 @@ void losuj_samolot(list<Plane>& samolot)
 	{
 		a = algorytm_losujacy(1, ROW - 2);
 		a = check_number(a, samolot, 1);
-		obj1.set_plane(a, 0, 0, 0, 1, 65 + samolot.size());
+		obj1.set_plane(a, 0, 0, 0, 1,check_name('A',samolot));
 		samolot.push_back(obj1);
 	}
 	else
 	{
 		b = algorytm_losujacy(1, ROW - 2);
 		b = check_number(b, samolot, 0);
-		obj1.set_plane(b, COL - 1, 0, 0, 0, 65 + samolot.size());
+		obj1.set_plane(b, COL - 1, 0, 0, 0, check_name('A', samolot));
 		samolot.push_back(obj1);
 	}
 }
@@ -233,6 +234,21 @@ int check_number(int number, list<Plane>& samolot, bool direction)
 	return number;
 }
 
+char check_name(char name, list<Plane>& samolot)
+{
+	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)// funkcja sprawdza po kazdyym elemencie samolotu czy jest zarezerwowana taka nazwa
+	{// kod sie zaczyna od pierwszej litery zapisanej w liscie samolotow
+		if (i->nazwa == name)
+		{
+			name += 1;//jesli tak to inkrementiuje literke podana do funkcji
+		}
+		else
+		{
+			return name;//jesli takiej literki nie ma to zwraca ja 
+		}
+	}
+	return name;//jesli lista jest pusta i for nie moze sie wykonac to wtedy jest zwracana podana podana literka
+}
 bool check_neigbours(bool direction,int which_row, array<array<Tile, COL>, ROW> board)
 {
 	if (direction == 1)
