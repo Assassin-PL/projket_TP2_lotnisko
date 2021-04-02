@@ -8,7 +8,7 @@ using namespace std;
 
 const int ROW = 10;
 const int COL = 100;
-const int probability = 50;
+const int probability = 100;
 
 class Tile
 {
@@ -120,9 +120,8 @@ void set_board(array<array<Tile, COL>, ROW>& board);
 void view_board(array<array<Tile, COL>, ROW>& board);
 void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot);
 void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa);
-void start_flight(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa);
 int algorytm_losujacy(int beg, int end);
-int check_number(int number, list<Plane>& samolot, bool direction);
+int check_number(int number, list<Plane>& samolot, bool direction, int& tries);
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
 char check_name(char name, list<Plane>& samolot);
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa);
@@ -197,41 +196,57 @@ void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot)
 
 void losuj_samolot(list<Plane>& samolot)
 {
-	int a, b, c;
+	int a, b, c,d;
+	d = 0;
 	Plane obj1(0, 0, 0, 0, 0, '=');
 	c = algorytm_losujacy(0, 1);
 	if (c == 1)
 	{
 		a = algorytm_losujacy(1, ROW - 2);
-		a = check_number(a, samolot, 1);
-		obj1.set_plane(a, 0, 0, 0, 1, check_name('A', samolot));
-		samolot.push_back(obj1);
+		a = check_number(a, samolot, 1, d);//jesli zostanie zwrocone 0 to znaczy ze nie moze sie pojawic nowy samolot na hangarze
+		if (a > 0 && a < ROW - 2)
+		{
+			obj1.set_plane(a, 0, 0, 0, 1, check_name('A', samolot));
+			samolot.push_back(obj1);
+		}
 	}
 	else
 	{
 		b = algorytm_losujacy(1, ROW - 2);
-		b = check_number(b, samolot, 0);
-		obj1.set_plane(b, COL - 1, 0, 0, 0, check_name('A', samolot));
-		samolot.push_back(obj1);
+		b = check_number(b, samolot, 0, d);
+		if (b > 0 && b < ROW - 2)
+		{
+			obj1.set_plane(b, COL - 1, 0, 0, 0, check_name('A', samolot));
+			samolot.push_back(obj1);
+		}
 	}
 }
 
-int check_number(int number, list<Plane>& samolot, bool direction)
+int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 {
-	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
+	if (tries < 10000000)// sprawdzanie czy nie nastapilo wiecej niz zalecane liczba losowan
 	{
-		if (i->x == number && direction == 1)
+		for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 		{
-			number = algorytm_losujacy(1, ROW - 2);
-			number = check_number(number, samolot, direction);
+			if (i->x == number && direction == 1)
+			{
+				number = algorytm_losujacy(1, ROW - 2);
+				tries++;//za kazdym razem wylosowania nowej liczby zwieksza sie liczba tries
+				number = check_number(number, samolot, direction, tries);
+			}
+			if (i->x == number && direction == 0)
+			{
+				number = algorytm_losujacy(1, ROW - 2);
+				tries++;
+				number = check_number(number, samolot, direction, tries);
+			}
 		}
-		if (i->x == number && direction == 0)
-		{
-			number = algorytm_losujacy(1, ROW - 2);
-			number = check_number(number, samolot, direction);
-		}
+		return number;
 	}
-	return number;
+	else //jesli liczba prob przekroczy 10000000 to funkcja zwroci 0 i to spowoduje ze juz sie nie pojawi samolot
+	{
+		return 0;
+	}
 }
 
 char check_name(char name, list<Plane>& samolot)
@@ -381,6 +396,54 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			break;
 		}
 	}
+}
+
+void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
+{
+	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)// zaczynamy od zliczania kazdego samolotu
+	{
+		if (i->direction == 1)//sprawdzamy w jakim kierunku nasz samolot leci, 1 oznacza ze leci w prawo
+		{
+			if (i->y + 2 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
+			{
+				samolot.erase(i);//funkcja zajmujaca sie kasowaniem samolotu zaznacznego itteratorem i
+			}
+			else
+			{
+				if (i->deley > 0 && i->deley < 10)//funkcja liczaca opoznienie, jesli zwroci prawde to bedzie sie poruszalo w kierunku command
+				{
+					move_plain(samolot, board, i->nazwa);
+					i->deley--;
+				}
+				else//jesli nie to defultowo jest zaznaczone ze samolot leci lotem prostym
+				{
+					i->command = 0;
+					move_plain(samolot, board, i->nazwa);
+				}
+			}
+		}
+		else//to samo co powyzej tylko dla lewej strony
+		{
+			if (i->y - 2 == 0)
+			{
+				samolot.erase(i);
+			}
+			else
+			{
+				if (i->deley > 0 && i->deley < 10)
+				{
+					move_plain(samolot, board, i->nazwa);
+					i->deley--;
+				}
+				else
+				{
+					i->command = 0;
+					move_plain(samolot, board, i->nazwa);
+				}
+			}
+		}
+	}
+	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
 }
 
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
