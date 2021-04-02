@@ -123,16 +123,15 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 int algorytm_losujacy(int beg, int end);
 int check_number(int number, list<Plane>& samolot, bool direction, int& tries);
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
-bool is_collsision(list<Plane>& samolot);
-bool check_priv_zone(list<Plane>::iterator j, list<Plane>::iterator i);
 char check_name(char name, list<Plane>& samolot);
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa);
 
 int main()
 {
+	setlocale(LC_CTYPE, "Polish");
 	array<array<Tile, COL>, ROW> board;
 	set_board(board);
-	view_board(board);
+	//view_board(board);
 	list<Plane> samolot;
 	losuj_samolot(samolot);
 	fill_the_board(board, samolot);
@@ -356,10 +355,10 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 		}
 		else
 		{
+			board[wsk_plane->x][wsk_plane->y + 2] = ' ';
 			board[wsk_plane->x][wsk_plane->y + 1] = ' ';
 			board[wsk_plane->x][wsk_plane->y - 1] = ' ';
 			board[wsk_plane->x][wsk_plane->y - 2] = ' ';
-			board[wsk_plane->x][wsk_plane->y - 3] = ' ';
 		}
 		switch (wsk_plane->command)
 		{
@@ -481,36 +480,6 @@ bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 	return 0;
 }
 
-bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samolot czy nie wlecial w przestrzen prywatna innego samolotu
-{
-	for (list<Plane>::iterator j = samolot.begin(); j != samolot.end(); ++j)//petla sprawdza czy priv zone plain1 pokrywa sie z priv zone plain2
-	{
-		j++;//o to tu w ty dziwactwie chodzi ze w nastepnym kroku algorytm sprawdzal sasiada, a nie samego siebie, bo by zawsze true zwrocil as to bylby blad w kodzie
-		for (list<Plane>::iterator i = j; i != samolot.end(); ++i)//tu sprawdza plaina1 z kolejnymi plainami liczac od samsiada
-		{
-			if (check_priv_zone(j, i))//jesli funkcja zwroci true to znaczy ze nastapila kolizja
-			{
-				return true;
-			}
-		}
-		j--;//te dziadostwo musi sie zdekrementowac tylko po to aby for sie inkrementowal pojedynczo a nie podwojnie
-	}
-	return false;//jesli zwroci false to znaczy ze nie wykryto kolizji @!!wada taka ze program sprawdza czy istnieje kolizja, ale nie wzkazuje miedz jakimi samolotami ona nastapila!!@
-}
-
-bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
-{
-	for (int j = 0; j<3 ;j++)//standardowo sprawdza 2 pola od siebie
-		for (int i = 0; i < 3; i++)
-		{
-			if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))
-			{
-				return true;//jesli ten if sie spelni to znaczy ze wszystkie istnije taka kombinacja samolotow ze sie zderzyly
-			}
-		}
-	return false;
-}
-
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
 	string choice;
@@ -546,55 +515,36 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 			//i w tym momencie wszystkie samoloty powinny wykonać ruch do przodu, lub tak jak jeszcze im zostało
 			//break;
 		}
-		else
+		else if (choice[0] >= 'A' && choice[0] <= 'Z')
 		{
-			while (!WpisPoprawny(samolot, choice[0],choice[1],choice[2]))
+			while (!WpisPoprawny(samolot, choice[0], choice[1], choice[2]))
 			{
 				cout << "Niepoprawne dane. Prosze wpisac nazwe samolotu obecnego na planszy, ktory ma mozliwosc ruszenia sie o dana liczbe ruchow" << endl;
 				cin >> choice;
 			}
-			switch (choice[1])
-			{
-			case 'e':if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot);
-				break;
-			case 'k':
-				fill_the_board(board, samolot);
-				view_board(board);
-				break;
-			case '=':; //to niepotrzebne
-				break;
-			case 92: //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
-				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
-				wsk_plane->command = 1;
-				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				else   //sam ruch samolotów powinien się odbywać chyba w jednym momencie, więc w tej planszy powinniśmy tylko dodawać samolotom wartości do wznoszenia
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				break;
-			case '/':                //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do wznoszenia; jeżeli samolot już ma wyznaczone opadanie, powinna się blokować taka możliwość
-				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
-				wsk_plane->command = 2;
-				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				else   //sam ruch samolotów powinien się odbywać chyba w jednym momencie, więc w tej planszy powinniśmy tylko dodawać samolotom wartości do wznoszenia
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				break;
-			case 'c':cout << "dupa3"; //powinna być jakaś zmienna określająca ile jeszcze samolotowi zostało (może już jest). Gdy zostanie wpisane c, ta zmienna powinna być zerowana
-				break;
-			default: system("cls");
-				break;
+			if (algorytm_losujacy(0, 100) <= probability) losuj_samolot(samolot);//tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
+			wsk_plane = get_itterator_of_plane(samolot, choice[0]);
+			if (choice[1] == 'c') wsk_plane->command = 0;
+			else{
+				if (choice[1] == '\\') wsk_plane->command = 1;
+				else if (choice[1] == '/') wsk_plane->command = 2;
+				wsk_plane->deley = choice[2];
 			}
+			//system("cls");
+			make_turn(samolot, board);
 			fill_the_board(board, samolot);
 			view_board(board);
 		}
 	} while (choice[0] != 112);
 }
 //zastosowac clean coda zeby bylo ok
+//dodajemy samoloty na koncu(push_back), a usuwamy na poczatku(pop_front)
+//tworzymy nieskoczona petle programu
+//1 losujemy czy ma sie pojawic nowy samolot, globalna zmienna probalistyczna int (od 0 do 100) losujemy w randomie liczbe od 0 do 100 
+// i jesli wylosowana jest mniejsza od prob to losujemy samolot
+//2 losowanie czy ma sie samolot poruszac w lewo czy w prawo
+//3 loswanie na ktorym torze ma sie pojawic i zrobic if czy nie bedzie kolizji przy pojawieniu sie nowego samolotu 
+// i losowac az znajdzi sie miejsce w odleglosci 7 pol
+//4 logika zderzen dziala do 2 pol odleglosci, przelatuje forem po kazdym rzedzie i sprawdzam czy istnije taka sytuacja ze 
+//5 dodac do klasy atrybut oznaczajcy ile razy za wykonac dany rozkaz
+//6 zrobic logike jak doleci
