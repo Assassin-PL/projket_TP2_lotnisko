@@ -116,7 +116,7 @@ Plane::~Plane()
 
 void losuj_samolot(list<Plane>& samolot);
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
-void set_board(array<array<Tile, COL>, ROW> &board);
+void set_board(array<array<Tile, COL>, ROW>& board);
 void view_board(array<array<Tile, COL>, ROW>& board);
 void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot);
 void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa);
@@ -137,8 +137,8 @@ int main()
 	fill_the_board(board, samolot);
 	cout << endl;
 	view_board(board);
-	menu(samolot,board);
-    return 0;
+	menu(samolot, board);
+	return 0;
 }
 
 int algorytm_losujacy(int beg, int end)
@@ -150,7 +150,7 @@ int algorytm_losujacy(int beg, int end)
 	return distr(gen);
 }
 
-void set_board(array<array<Tile, COL>, ROW> &board)
+void set_board(array<array<Tile, COL>, ROW>& board)
 {
 	char board_borders = '=';
 	char board_rows = '|';
@@ -197,14 +197,14 @@ void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot)
 
 void losuj_samolot(list<Plane>& samolot)
 {
-	int a,b,c;
+	int a, b, c;
 	Plane obj1(0, 0, 0, 0, 0, '=');
 	c = algorytm_losujacy(0, 1);
 	if (c == 1)
 	{
 		a = algorytm_losujacy(1, ROW - 2);
 		a = check_number(a, samolot, 1);
-		obj1.set_plane(a, 0, 0, 0, 1,check_name('A',samolot));
+		obj1.set_plane(a, 0, 0, 0, 1, check_name('A', samolot));
 		samolot.push_back(obj1);
 	}
 	else
@@ -249,13 +249,13 @@ char check_name(char name, list<Plane>& samolot)
 	}
 	return name;//jesli lista jest pusta i for nie moze sie wykonac to wtedy jest zwracana podana podana literka
 }
-bool check_neigbours(bool direction,int which_row, array<array<Tile, COL>, ROW> board)
+bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board)
 {
 	if (direction == 1)
 	{
 		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row  + i][COL].tile_view == ' ')
+			if (board[which_row + i][COL].tile_view == ' ')
 			{
 				return true;
 			}
@@ -275,7 +275,7 @@ bool check_neigbours(bool direction,int which_row, array<array<Tile, COL>, ROW> 
 	}
 }
 
-void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char nazwa)
+void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa)
 {
 	list<Plane>::iterator wsk_plane;
 	wsk_plane = get_itterator_of_plane(samolot, nazwa);
@@ -335,7 +335,14 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 		board[wsk_plane->x][wsk_plane->y] = ' ';
 		if (wsk_plane->y == COL - 1)
 		{
-			wsk_plane->y -= 2;
+			wsk_plane->y -= 3;
+		}
+		else
+		{
+			board[wsk_plane->x][wsk_plane->y + 1] = ' ';
+			board[wsk_plane->x][wsk_plane->y - 1] = ' ';
+			board[wsk_plane->x][wsk_plane->y - 2] = ' ';
+			board[wsk_plane->x][wsk_plane->y - 3] = ' ';
 		}
 		switch (wsk_plane->command)
 		{
@@ -355,6 +362,24 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 			break;
 		}
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
+		board[wsk_plane->x][wsk_plane->y - 1] = '(';
+		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley + '0';
+		board[wsk_plane->x][wsk_plane->y + 2] = ')';
+		switch (wsk_plane->command)
+		{
+		case 0:
+			board[wsk_plane->x][wsk_plane->y - 2] = '=';
+			break;
+		case 1:
+			board[wsk_plane->x][wsk_plane->y - 2] = '/';
+			break;
+		case 2:
+			board[wsk_plane->x][wsk_plane->y - 2] = '\\';
+			break;
+		default:
+			board[wsk_plane->x][wsk_plane->y - 2] = '=';
+			break;
+		}
 	}
 }
 
@@ -408,7 +433,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		{
 			switch (choice[1])
 			{
-			case 'e':if(algorytm_losujacy(0,100)<=probability)losuj_samolot(samolot);
+			case 'e':if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot);
 				break;
 			case 'k':
 				fill_the_board(board, samolot);
@@ -416,7 +441,17 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				break;
 			case '=':; //to niepotrzebne
 				break;
-			case 92: cout << "dupa"; //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
+			case 92: //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
+				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
+				wsk_plane->command = 1;
+				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
+				{
+					move_plain(samolot, board, choice[0]);
+				}
+				else   //sam ruch samolotów powinien się odbywać chyba w jednym momencie, więc w tej planszy powinniśmy tylko dodawać samolotom wartości do wznoszenia
+				{
+					move_plain(samolot, board, choice[0]);
+				}
 				break;
 			case '/':                //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do wznoszenia; jeżeli samolot już ma wyznaczone opadanie, powinna się blokować taka możliwość
 				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
