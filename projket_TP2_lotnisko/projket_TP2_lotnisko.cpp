@@ -279,10 +279,20 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 {
 	list<Plane>::iterator wsk_plane;
 	wsk_plane = get_itterator_of_plane(samolot, nazwa);
-	board[wsk_plane->x][wsk_plane->y] = ' ';
 	if (wsk_plane->direction == 1)
 	{
-		if (wsk_plane->y == 0) wsk_plane->y += 2;
+		board[wsk_plane->x][wsk_plane->y] = ' ';
+		if (wsk_plane->y == 0)
+		{
+			wsk_plane->y += 2;
+		}
+		else
+		{
+			board[wsk_plane->x][wsk_plane->y - 1] = ' ';
+			board[wsk_plane->x][wsk_plane->y + 1] = ' ';
+			board[wsk_plane->x][wsk_plane->y + 2] = ' ';
+			board[wsk_plane->x][wsk_plane->y + 3] = ' ';
+		}
 		switch (wsk_plane->command)
 		{
 		case 0:
@@ -298,12 +308,35 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 			break;
 		default:
 			wsk_plane->y += 1;
+			break;
+		}
+		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
+		board[wsk_plane->x][wsk_plane->y - 1] = '(';
+		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley + '0';
+		board[wsk_plane->x][wsk_plane->y + 2] = ')';
+		switch (wsk_plane->command)
+		{
+		case 0:
+			board[wsk_plane->x][wsk_plane->y + 3] = '=';
+			break;
+		case 1:
+			board[wsk_plane->x][wsk_plane->y + 3] = '\\';
+			break;
+		case 2:
+			board[wsk_plane->x][wsk_plane->y + 3] = '/';
+			break;
+		default:
+			board[wsk_plane->x][wsk_plane->y + 3] = '=';
 			break;
 		}
 	}
 	else
 	{
-		if (wsk_plane->y == COL - 1) wsk_plane->y -= 2;
+		board[wsk_plane->x][wsk_plane->y] = ' ';
+		if (wsk_plane->y == COL - 1)
+		{
+			wsk_plane->y -= 2;
+		}
 		switch (wsk_plane->command)
 		{
 		case 0:
@@ -321,8 +354,8 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 			wsk_plane->y -= 1;
 			break;
 		}
+		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 	}
-	board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 }
 
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
