@@ -462,7 +462,7 @@ bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 	ile -= '0';
 	wsk_plane = get_itterator_of_plane(samolot, nazwa);
 	if (ile > 9 || ile < 1) return 0;
-	else if (gdzie == '/' && wsk_plane->x - ile < 0) return 0;
+	else if (gdzie == '/' && wsk_plane->x - ile < 1) return 0;
 	else if (gdzie == '\\' && wsk_plane->x + ile > ROW - 2) return 0;
 	else return 1;
 }
