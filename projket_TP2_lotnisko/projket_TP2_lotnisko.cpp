@@ -120,6 +120,7 @@ void set_board(array<array<Tile, COL>, ROW> &board);
 void view_board(array<array<Tile, COL>, ROW>& board);
 void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot);
 void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa);
+void start_flight(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa);
 int algorytm_losujacy(int beg, int end);
 int check_number(int number, list<Plane>& samolot, bool direction);
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
@@ -299,7 +300,55 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 			wsk_plane->y += 1;
 			break;
 		default:
+			wsk_plane->x -= 1;
+			break;
+		}
+	}
+	board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
+}
+
+void start_flight(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char nazwa)
+{
+	list<Plane>::iterator wsk_plane;
+	wsk_plane = get_itterator_of_plane(samolot, nazwa);
+	board[wsk_plane->x][wsk_plane->y] = ' ';
+	if (wsk_plane->direction == 1)
+	{
+		switch (wsk_plane->command)
+		{
+		case 0:
 			wsk_plane->x += 1;
+			break;
+		case 1:
+			wsk_plane->x += 1;
+			wsk_plane->y -= 1;
+			break;
+		case 2:
+			wsk_plane->x += 1;
+			wsk_plane->y += 1;
+			break;
+		default:
+			wsk_plane->x += 1;
+			break;
+		}
+	}
+	else
+	{
+		switch (wsk_plane->command)
+		{
+		case 0:
+			wsk_plane->x -= 1;
+			break;
+		case 1:
+			wsk_plane->x -= 1;
+			wsk_plane->y -= 1;
+			break;
+		case 2:
+			wsk_plane->x -= 1;
+			wsk_plane->y += 1;
+			break;
+		default:
+			wsk_plane->x -= 1;
 			break;
 		}
 	}
@@ -319,8 +368,6 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
 
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
-	//char a = 'Z';
-	//a = a + 2;
 	string choice;
 	list<Plane>::iterator wsk_plane;
 	do
@@ -373,7 +420,6 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				wsk_plane->command = 2;
 				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
 				{
-					move_plain(samolot, board, choice[0]);
 					move_plain(samolot, board, choice[0]);
 				}
 				else   //sam ruch samolotów powinien się odbywać chyba w jednym momencie, więc w tej planszy powinniśmy tylko dodawać samolotom wartości do wznoszenia
