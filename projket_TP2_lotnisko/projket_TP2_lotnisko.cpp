@@ -460,13 +460,25 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
 }
 
 bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
-	list<Plane>::iterator wsk_plane;
 	ile -= '0';
-	wsk_plane = get_itterator_of_plane(samolot, nazwa);
 	if (ile > 9 || ile < 1) return 0;
-	else if (gdzie == '/' && wsk_plane->x - ile < 1) return 0;
-	else if (gdzie == '\\' && wsk_plane->x + ile > ROW - 2) return 0;
-	else return 1;
+	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
+	{
+		if (i->nazwa == nazwa)
+		{
+			if (gdzie == '/' && i->x - ile < 1) {
+				cout << "Nie mozna przesunac sie o tyle pol w gore!"<<endl;
+				return 0;
+			}
+			else if (gdzie == '\\' && i->x + ile > ROW - 2) {
+				cout << "Samolot nie moze obniżyć się o tyle pól!" << endl;
+				return 0;
+			}
+			else return 1;
+		}
+	}
+	cout << "Nie ma takiego samolotu w zasięgu!" << endl;
+	return 0;
 }
 
 bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samolot czy nie wlecial w przestrzen prywatna innego samolotu
