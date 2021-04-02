@@ -269,18 +269,18 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 		switch (wsk_plane->command)
 		{
 		case 0:
-			wsk_plane->x += 1;
+			wsk_plane->y += 1;
 			break;
 		case 1:
 			wsk_plane->x += 1;
-			wsk_plane->y -= 1;
+			wsk_plane->y += 1;
 			break;
 		case 2:
-			wsk_plane->x += 1;
+			wsk_plane->x -= 1;
 			wsk_plane->y += 1;
 			break;
 		default:
-			wsk_plane->x += 1;
+			wsk_plane->y += 1;
 			break;
 		}
 	}
@@ -289,18 +289,18 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board,char n
 		switch (wsk_plane->command)
 		{
 		case 0:
-			wsk_plane->x -= 1;
+			wsk_plane->y -= 1;
 			break;
 		case 1:
-			wsk_plane->x -= 1;
+			wsk_plane->x += 1;
 			wsk_plane->y -= 1;
 			break;
 		case 2:
 			wsk_plane->x -= 1;
-			wsk_plane->y += 1;
+			wsk_plane->y -= 1;
 			break;
 		default:
-			wsk_plane->x -= 1;
+			wsk_plane->y -= 1;
 			break;
 		}
 	}
@@ -317,18 +317,18 @@ void start_flight(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, cha
 		switch (wsk_plane->command)
 		{
 		case 0:
-			wsk_plane->x += 1;
+			wsk_plane->y += 1;
 			break;
 		case 1:
 			wsk_plane->x += 1;
-			wsk_plane->y -= 1;
+			wsk_plane->y += 1;
 			break;
 		case 2:
-			wsk_plane->x += 1;
+			wsk_plane->x -= 1;
 			wsk_plane->y += 1;
 			break;
 		default:
-			wsk_plane->x += 1;
+			wsk_plane->y += 1;
 			break;
 		}
 	}
@@ -337,18 +337,18 @@ void start_flight(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, cha
 		switch (wsk_plane->command)
 		{
 		case 0:
-			wsk_plane->x -= 1;
+			wsk_plane->y -= 1;
 			break;
 		case 1:
-			wsk_plane->x -= 1;
+			wsk_plane->x += 1;
 			wsk_plane->y -= 1;
 			break;
 		case 2:
 			wsk_plane->x -= 1;
-			wsk_plane->y += 1;
+			wsk_plane->y -= 1;
 			break;
 		default:
-			wsk_plane->x -= 1;
+			wsk_plane->y -= 1;
 			break;
 		}
 	}
