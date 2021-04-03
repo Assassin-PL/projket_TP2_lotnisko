@@ -8,7 +8,7 @@ using namespace std;
 
 const int ROW = 10;
 const int COL = 100;
-const int probability = 100;
+const int probability = 50;
 
 class Tile
 {
@@ -331,7 +331,6 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
 		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
-		//cout << wsk_plane->deley;
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -406,9 +405,10 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
 	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)// zaczynamy od zliczania kazdego samolotu
 	{
+		
 		if (i->direction == 1)//sprawdzamy w jakim kierunku nasz samolot leci, 1 oznacza ze leci w prawo
 		{
-			if (i->y + 2 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
+			if (i->y + 4 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
 			{
 				samolot.erase(i);//funkcja zajmujaca sie kasowaniem samolotu zaznacznego itteratorem i
 			}
@@ -416,19 +416,20 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 			{
 				if (i->deley > 0 && i->deley < 10)//funkcja liczaca opoznienie, jesli zwroci prawde to bedzie sie poruszalo w kierunku command
 				{
-					move_plain(samolot, board, i->nazwa);
+					//move_plain(samolot, board, i->nazwa);
 					i->deley--;
 				}
 				else//jesli nie to defultowo jest zaznaczone ze samolot leci lotem prostym
 				{
 					i->command = 0;
-					move_plain(samolot, board, i->nazwa);
+					//move_plain(samolot, board, i->nazwa);
 				}
+				move_plain(samolot, board, i->nazwa);
 			}
 		}
 		else//to samo co powyzej tylko dla lewej strony
 		{
-			if (i->y - 2 == 0)
+			if (i->y - 4 == 0)
 			{
 				samolot.erase(i);
 			}
@@ -436,16 +437,18 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 			{
 				if (i->deley > 0 && i->deley < 10)
 				{
-					move_plain(samolot, board, i->nazwa);
+					//move_plain(samolot, board, i->nazwa);
 					i->deley--;
 				}
 				else
 				{
 					i->command = 0;
-					move_plain(samolot, board, i->nazwa);
+					//move_plain(samolot, board, i->nazwa);
 				}
+				move_plain(samolot, board, i->nazwa);
 			}
 		}
+		//move_plain(samolot, board, i->nazwa);
 	}
 	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
 }
@@ -543,6 +546,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
 		getline(cin, choice);
+		//make_turn(samolot, board);
 		if (choice[0] == ' ')
 		{
 			cout << "Nastepna tura" << endl;
@@ -555,7 +559,6 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				cout << "Niepoprawne dane. Prosze wpisac nazwe samolotu obecnego na planszy, ktory ma mozliwosc ruszenia sie o dana liczbe ruchow" << endl;
 				cin >> choice;
 			}
-			//if (algorytm_losujacy(0, 100) <= probability) losuj_samolot(samolot);//tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
 			wsk_plane = get_itterator_of_plane(samolot, choice[0]);
 			if (choice[1] == 'c') { 
 				wsk_plane->command = 0;
