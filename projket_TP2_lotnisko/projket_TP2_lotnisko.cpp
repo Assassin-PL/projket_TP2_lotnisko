@@ -40,7 +40,7 @@ Tile::~Tile()
 class Plane
 {
 public:
-	int x, y, deley=0, command;
+	int x, y, deley, command;
 	bool direction;
 	char nazwa;
 	Plane(int row_value, int column_value, int plain_value_of_deley, int set_command, bool flight_direction, char name_of_plain);
@@ -131,6 +131,7 @@ int main()
 	setlocale(LC_CTYPE, "Polish");
 	array<array<Tile, COL>, ROW> board;
 	set_board(board);
+	//view_board(board);
 	list<Plane> samolot;
 	losuj_samolot(samolot);
 	fill_the_board(board, samolot);
