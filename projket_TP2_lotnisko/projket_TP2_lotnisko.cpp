@@ -114,6 +114,7 @@ Plane::~Plane()
 {
 }
 
+void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
 void losuj_samolot(list<Plane>& samolot);
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
 void set_board(array<array<Tile, COL>, ROW>& board);
