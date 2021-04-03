@@ -329,6 +329,7 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
 		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
+		//cout << wsk_plane->deley;
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -379,7 +380,7 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 		}
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
-		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley +'0');
+		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -530,7 +531,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 			else {
 				if (choice[1] == '\\') wsk_plane->command = 1;
 				else if (choice[1] == '/') wsk_plane->command = 2;
-				wsk_plane->deley = choice[2];
+				wsk_plane->deley = choice[2]-'0';
 			}
 
 		}
