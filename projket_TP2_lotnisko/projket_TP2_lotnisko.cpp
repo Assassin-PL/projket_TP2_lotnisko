@@ -255,15 +255,11 @@ int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 
 char check_name(char name, list<Plane>& samolot)
 {
-	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)// funkcja sprawdza po kazdyym elemencie samolotu czy jest zarezerwowana taka nazwa
+	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)// funkcja sprawdza po kazdyym elemencie samolotu czy jest zarezerwowana taka nazwa
 	{// kod sie zaczyna od pierwszej litery zapisanej w liscie samolotow
 		if (i->nazwa == name)
 		{
 			name += 1;//jesli tak to inkrementiuje literke podana do funkcji
-		}
-		else
-		{
-			return name;//jesli takiej literki nie ma to zwraca ja 
 		}
 	}
 	return name;//jesli lista jest pusta i for nie moze sie wykonac to wtedy jest zwracana podana podana literka
@@ -409,9 +405,15 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		
 		if (i->direction == 1)//sprawdzamy w jakim kierunku nasz samolot leci, 1 oznacza ze leci w prawo
 		{
-			if (i->y + 4 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
+			if (i->y + 8 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
 			{
-				samolot.erase(i);//funkcja zajmujaca sie kasowaniem samolotu zaznacznego itteratorem i
+				cout << "cycki";
+				board[i->x][i->y] = ' ';
+				board[i->x][i->y - 1] = ' ';
+				board[i->x][i->y + 1] = ' ';
+				board[i->x][i->y + 2] = ' ';
+				board[i->x][i->y - 2] = ' ';
+				i = samolot.erase(i);//funkcja zajmujaca sie kasowaniem samolotu zaznacznego itteratorem i
 			}
 			else
 			{
@@ -430,9 +432,15 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		}
 		else//to samo co powyzej tylko dla lewej strony
 		{
-			if (i->y - 4 == 0)
+			if (i->y - 8 == 0)
 			{
-				samolot.erase(i);
+				cout << "gówno";
+				board[i->x][i->y] = ' ';
+				board[i->x][i->y - 1] = ' ';
+				board[i->x][i->y + 1] = ' ';
+				board[i->x][i->y + 2] = ' ';
+				board[i->x][i->y + 3] = ' ';
+				i = samolot.erase(i);
 			}
 			else
 			{
