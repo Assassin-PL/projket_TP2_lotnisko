@@ -208,7 +208,7 @@ void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board)
 	{
 		a = algorytm_losujacy(1, ROW - 2);
 		a = check_number(a, samolot, 1, d);//jesli zostanie zwrocone 0 to znaczy ze nie moze sie pojawic nowy samolot na hangarze
-		if (a > 0 && a < ROW - 2 )
+		if (a > 0 && a < ROW - 2 && check_neigbours(c, a, board))
 		{
 			obj1.set_plane(a, 0, 0, 0, 1, check_name('A', samolot));
 			samolot.push_back(obj1);
@@ -218,7 +218,7 @@ void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board)
 	{
 		b = algorytm_losujacy(1, ROW - 2);
 		b = check_number(b, samolot, 0, d);
-		if (b > 0 && b < ROW - 2 )
+		if (b > 0 && b < ROW - 2 && check_neigbours(c,b,board) )
 		{
 			obj1.set_plane(b, COL - 1, 0, 0, 0, check_name('A', samolot));
 			samolot.push_back(obj1);
@@ -268,9 +268,9 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 {
 	if (direction == 1)
 	{
-		for (int i = 2; i < 5; i++)
+		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row + i][0].tile_view != ' ')
+			if (board[which_row][0+i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -279,9 +279,9 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	}
 	else
 	{
-		for (int i = 2; i < 5; i++)
+		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row - i][COL-1].tile_view != ' ')
+			if (board[which_row][COL-1-i].tile_view != ' ')
 			{
 				return false;
 			}
