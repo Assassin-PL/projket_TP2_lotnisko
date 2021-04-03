@@ -508,7 +508,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
-		cin >> choice;
+		getline(cin, choice);
 		if (choice[0] == ' ')
 		{
 			cout << "Nastepna tura" << endl;
@@ -530,11 +530,12 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				else if (choice[1] == '/') wsk_plane->command = 2;
 				wsk_plane->deley = choice[2];
 			}
-			//system("cls");
-			make_turn(samolot, board);
-			fill_the_board(board, samolot);
-			view_board(board);
+			
 		}
+		//system("cls");
+		make_turn(samolot, board);
+		fill_the_board(board, samolot);
+		view_board(board);
 	} while (choice[0] != 112);
 }
 //zastosowac clean coda zeby bylo ok
