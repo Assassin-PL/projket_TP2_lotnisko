@@ -538,7 +538,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		else cout << "Niepoprawna instrukcja!" << endl;
 		//system("cls");
 		make_turn(samolot, board);
-		//fill_the_board(board, samolot);
+		fill_the_board(board, samolot);
 		view_board(board);
 	} while (choice[0] != 112);
 }
