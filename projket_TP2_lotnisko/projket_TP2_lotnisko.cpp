@@ -130,9 +130,10 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa);
 
 int main()
 {
+	setlocale(LC_CTYPE, "Polish");
 	array<array<Tile, COL>, ROW> board;
 	set_board(board);
-	view_board(board);
+	//view_board(board);
 	list<Plane> samolot;
 	losuj_samolot(samolot);
 	fill_the_board(board, samolot);
@@ -329,7 +330,8 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 		}
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
-		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley + '0';
+		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
+		//cout << wsk_plane->deley;
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -356,10 +358,10 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 		}
 		else
 		{
+			board[wsk_plane->x][wsk_plane->y + 2] = ' ';
 			board[wsk_plane->x][wsk_plane->y + 1] = ' ';
 			board[wsk_plane->x][wsk_plane->y - 1] = ' ';
 			board[wsk_plane->x][wsk_plane->y - 2] = ' ';
-			board[wsk_plane->x][wsk_plane->y - 3] = ' ';
 		}
 		switch (wsk_plane->command)
 		{
@@ -380,7 +382,7 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 		}
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
-		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley + '0';
+		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -461,7 +463,7 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
 
 bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 	ile -= '0';
-	if (ile > 9 || ile < 1) return 0;
+	if ((ile > 9 || ile < 1) && gdzie!='c') return 0;
 	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 	{
 		if (i->nazwa == nazwa)
@@ -500,7 +502,7 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 
 bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
 {
-	for (int j = 0; j<3 ;j++)//standardowo sprawdza 2 pola od siebie
+	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
 		for (int i = 0; i < 3; i++)
 		{
 			if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))
@@ -510,6 +512,7 @@ bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)
 		}
 	return false;
 }
+
 
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
@@ -539,62 +542,47 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
-		cin >> choice;
+		getline(cin, choice);
 		if (choice[0] == ' ')
 		{
 			cout << "Nastepna tura" << endl;
 			//i w tym momencie wszystkie samoloty powinny wykonać ruch do przodu, lub tak jak jeszcze im zostało
-			//break;
 		}
-		else
+		else if (choice[0] >= 'A' && choice[0] <= 'Z')
 		{
-			while (!WpisPoprawny(samolot, choice[0],choice[1],choice[2]))
+			while (!WpisPoprawny(samolot, choice[0], choice[1], choice[2]))
 			{
 				cout << "Niepoprawne dane. Prosze wpisac nazwe samolotu obecnego na planszy, ktory ma mozliwosc ruszenia sie o dana liczbe ruchow" << endl;
 				cin >> choice;
 			}
-			switch (choice[1])
-			{
-			case 'e':if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot);
-				break;
-			case 'k':
-				fill_the_board(board, samolot);
-				view_board(board);
-				break;
-			case '=':; //to niepotrzebne
-				break;
-			case 92: //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
-				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
-				wsk_plane->command = 1;
-				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				else   //sam ruch samolotów powinien się odbywać chyba w jednym momencie, więc w tej planszy powinniśmy tylko dodawać samolotom wartości do wznoszenia
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				break;
-			case '/':                //tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do wznoszenia; jeżeli samolot już ma wyznaczone opadanie, powinna się blokować taka możliwość
-				wsk_plane = get_itterator_of_plane(samolot, choice[0]);
-				wsk_plane->command = 2;
-				if (wsk_plane->y == 0 || wsk_plane->y == COL - 1)
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				else   //sam ruch samolotów powinien się odbywać chyba w jednym momencie, więc w tej planszy powinniśmy tylko dodawać samolotom wartości do wznoszenia
-				{
-					move_plain(samolot, board, choice[0]);
-				}
-				break;
-			case 'c':cout << "dupa3"; //powinna być jakaś zmienna określająca ile jeszcze samolotowi zostało (może już jest). Gdy zostanie wpisane c, ta zmienna powinna być zerowana
-				break;
-			default: system("cls");
-				break;
+			//if (algorytm_losujacy(0, 100) <= probability) losuj_samolot(samolot);//tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
+			wsk_plane = get_itterator_of_plane(samolot, choice[0]);
+			if (choice[1] == 'c') { 
+				wsk_plane->command = 0;
+				wsk_plane->deley = 0;
 			}
-			fill_the_board(board, samolot);
-			view_board(board);
+			else {
+				if (choice[1] == '\\') wsk_plane->command = 1;
+				else if (choice[1] == '/') wsk_plane->command = 2;
+				wsk_plane->deley = choice[2]-'0';
+			}
+
 		}
+		else cout << "Niepoprawna instrukcja!" << endl;
+		//system("cls");
+		make_turn(samolot, board);
+		fill_the_board(board, samolot);
+		view_board(board);
 	} while (choice[0] != 112);
 }
 //zastosowac clean coda zeby bylo ok
+//dodajemy samoloty na koncu(push_back), a usuwamy na poczatku(pop_front)
+//tworzymy nieskoczona petle programu
+//1 losujemy czy ma sie pojawic nowy samolot, globalna zmienna probalistyczna int (od 0 do 100) losujemy w randomie liczbe od 0 do 100 
+// i jesli wylosowana jest mniejsza od prob to losujemy samolot
+//2 losowanie czy ma sie samolot poruszac w lewo czy w prawo
+//3 loswanie na ktorym torze ma sie pojawic i zrobic if czy nie bedzie kolizji przy pojawieniu sie nowego samolotu 
+// i losowac az znajdzi sie miejsce w odleglosci 7 pol
+//4 logika zderzen dziala do 2 pol odleglosci, przelatuje forem po kazdym rzedzie i sprawdzam czy istnije taka sytuacja ze 
+//5 dodac do klasy atrybut oznaczajcy ile razy za wykonac dany rozkaz
+//6 zrobic logike jak doleci
