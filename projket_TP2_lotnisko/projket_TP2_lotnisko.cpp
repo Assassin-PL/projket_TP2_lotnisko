@@ -546,7 +546,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
 		getline(cin, choice);
-		//make_turn(samolot, board);
+		make_turn(samolot, board);
 		if (choice[0] == ' ')
 		{
 			cout << "Nastepna tura" << endl;
@@ -565,15 +565,36 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				wsk_plane->deley = 0;
 			}
 			else {
-				if (choice[1] == '\\') wsk_plane->command = 1;
-				else if (choice[1] == '/') wsk_plane->command = 2;
-				wsk_plane->deley = choice[2]-'0';
+				wsk_plane->deley = choice[2] - '0';
+				if (choice[1] == '\\') {
+					wsk_plane->command = 1;
+					if (wsk_plane->direction == 1) {
+						board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
+						board[wsk_plane->x][wsk_plane->y + 3] = '\\';
+					}
+					else {
+						board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
+						board[wsk_plane->x][wsk_plane->y - 2] = '/';
+					}
+				}
+				else if (choice[1] == '/') {
+					wsk_plane->command = 2;
+					if (wsk_plane->direction == 1) {
+						board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
+						board[wsk_plane->x][wsk_plane->y + 3] = '/';
+					}
+					else {
+						board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
+						board[wsk_plane->x][wsk_plane->y - 2] = '\\';
+					}
+				}
+				
 			}
 
 		}
 		else cout << "Niepoprawna instrukcja!" << endl;
 		//system("cls");
-		make_turn(samolot, board);
+		//make_turn(samolot, board);
 		fill_the_board(board, samolot);
 		view_board(board);
 	} while (choice[0] != 112);
