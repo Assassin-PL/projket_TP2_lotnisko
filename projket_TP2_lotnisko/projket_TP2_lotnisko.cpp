@@ -115,7 +115,7 @@ Plane::~Plane()
 }
 
 void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
-void losuj_samolot(list<Plane>& samolot);
+void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board);
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
 void set_board(array<array<Tile, COL>, ROW>& board);
 void view_board(array<array<Tile, COL>, ROW>& board);
@@ -136,7 +136,7 @@ int main()
 	set_board(board);
 	//view_board(board);
 	list<Plane> samolot;
-	losuj_samolot(samolot);
+	losuj_samolot(samolot,board);
 	fill_the_board(board, samolot);
 	cout << endl;
 	view_board(board);
@@ -198,7 +198,7 @@ void fill_the_board(array<array<Tile, COL>, ROW>& board, list<Plane>& samolot)
 	}
 }
 
-void losuj_samolot(list<Plane>& samolot)
+void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board)
 {
 	int a, b, c, d;
 	d = 0;
@@ -208,7 +208,7 @@ void losuj_samolot(list<Plane>& samolot)
 	{
 		a = algorytm_losujacy(1, ROW - 2);
 		a = check_number(a, samolot, 1, d);//jesli zostanie zwrocone 0 to znaczy ze nie moze sie pojawic nowy samolot na hangarze
-		if (a > 0 && a < ROW - 2)
+		if (a > 0 && a < ROW - 2 )
 		{
 			obj1.set_plane(a, 0, 0, 0, 1, check_name('A', samolot));
 			samolot.push_back(obj1);
@@ -218,7 +218,7 @@ void losuj_samolot(list<Plane>& samolot)
 	{
 		b = algorytm_losujacy(1, ROW - 2);
 		b = check_number(b, samolot, 0, d);
-		if (b > 0 && b < ROW - 2)
+		if (b > 0 && b < ROW - 2 )
 		{
 			obj1.set_plane(b, COL - 1, 0, 0, 0, check_name('A', samolot));
 			samolot.push_back(obj1);
@@ -228,17 +228,17 @@ void losuj_samolot(list<Plane>& samolot)
 
 int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 {
-	if (tries < 10000000)// sprawdzanie czy nie nastapilo wiecej niz zalecane liczba losowan
+	if (tries < 1000000)// sprawdzanie czy nie nastapilo wiecej niz zalecane liczba losowan
 	{
 		for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 		{
-			if (i->x == number && direction == 1)
+			if (i->x == number && direction == 1 && i->y == 0)
 			{
 				number = algorytm_losujacy(1, ROW - 2);
 				tries++;//za kazdym razem wylosowania nowej liczby zwieksza sie liczba tries
 				number = check_number(number, samolot, direction, tries);
 			}
-			if (i->x == number && direction == 0)
+			if (i->x == number && direction == 0 && i->y == COL - 1)
 			{
 				number = algorytm_losujacy(1, ROW - 2);
 				tries++;
@@ -268,25 +268,25 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 {
 	if (direction == 1)
 	{
-		for (int i = 2; i < 7; i++)
+		for (int i = 2; i < 5; i++)
 		{
-			if (board[which_row + i][COL].tile_view == ' ')
+			if (board[which_row + i][0].tile_view != ' ')
 			{
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 	else
 	{
-		for (int i = 2; i < 7; i++)
+		for (int i = 2; i < 5; i++)
 		{
-			if (board[which_row - i][COL].tile_view == ' ')
+			if (board[which_row - i][COL-1].tile_view != ' ')
 			{
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 }
 
@@ -459,7 +459,7 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		}
 		//move_plain(samolot, board, i->nazwa);
 	}
-	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
+	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot,board);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
 }
 
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
