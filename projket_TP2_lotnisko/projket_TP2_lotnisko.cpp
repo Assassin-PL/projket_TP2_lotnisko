@@ -123,6 +123,8 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 int algorytm_losujacy(int beg, int end);
 int check_number(int number, list<Plane>& samolot, bool direction, int& tries);
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board);
+bool is_collsision(list<Plane>& samolot);
+bool check_priv_zone(list<Plane>::iterator j, list<Plane>::iterator i);
 char check_name(char name, list<Plane>& samolot);
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa);
 
@@ -480,6 +482,37 @@ bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 	cout << "Nie ma takiego samolotu w zasięgu!" << endl;
 	return 0;
 }
+
+bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samolot czy nie wlecial w przestrzen prywatna innego samolotu
+{
+	for (list<Plane>::iterator j = samolot.begin(); j != samolot.end(); ++j)//petla sprawdza czy priv zone plain1 pokrywa sie z priv zone plain2
+	{
+		j++;//o to tu w ty dziwactwie chodzi ze w nastepnym kroku algorytm sprawdzal sasiada, a nie samego siebie, bo by zawsze true zwrocil as to bylby blad w kodzie
+		for (list<Plane>::iterator i = j; i != samolot.end(); ++i)//tu sprawdza plaina1 z kolejnymi plainami liczac od samsiada
+		{
+			if (check_priv_zone(j, i))//jesli funkcja zwroci true to znaczy ze nastapila kolizja
+			{
+				return true;
+			}
+		}
+		j--;//te dziadostwo musi sie zdekrementowac tylko po to aby for sie inkrementowal pojedynczo a nie podwojnie
+	}
+	return false;//jesli zwroci false to znaczy ze nie wykryto kolizji @!!wada taka ze program sprawdza czy istnieje kolizja, ale nie wzkazuje miedz jakimi samolotami ona nastapila!!@
+}
+
+bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
+{
+	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
+		for (int i = 0; i < 3; i++)
+		{
+			if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))
+			{
+				return true;//jesli ten if sie spelni to znaczy ze wszystkie istnije taka kombinacja samolotow ze sie zderzyly
+			}
+		}
+	return false;
+}
+
 
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
