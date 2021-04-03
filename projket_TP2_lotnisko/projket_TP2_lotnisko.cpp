@@ -326,10 +326,10 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			wsk_plane->y += 1;
 			break;
 		}
-		//if (wsk_plane->deley == 0)wsk_plane->deley = 48;
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
-		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley;
+		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
+		//cout << wsk_plane->deley;
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -346,7 +346,6 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			board[wsk_plane->x][wsk_plane->y + 3] = '=';
 			break;
 		}
-		//if (wsk_plane->deley == 48)wsk_plane->deley = 0;
 	}
 	else
 	{
@@ -379,10 +378,9 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			wsk_plane->y -= 1;
 			break;
 		}
-		//if (wsk_plane->deley == 0)wsk_plane->deley = 48;
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
-		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley;
+		board[wsk_plane->x][wsk_plane->y + 1] = char(wsk_plane->deley + '0');
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -399,7 +397,6 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			board[wsk_plane->x][wsk_plane->y - 2] = '=';
 			break;
 		}
-		//if (wsk_plane->deley == 48)wsk_plane->deley = 0;
 	}
 }
 
@@ -464,7 +461,7 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
 
 bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 	ile -= '0';
-	if (ile > 9 || ile < 1) return 0;
+	if ((ile > 9 || ile < 1) && gdzie!='c') return 0;
 	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 	{
 		if (i->nazwa == nazwa)
@@ -517,7 +514,6 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		{
 			cout << "Nastepna tura" << endl;
 			//i w tym momencie wszystkie samoloty powinny wykonać ruch do przodu, lub tak jak jeszcze im zostało
-			//break;
 		}
 		else if (choice[0] >= 'A' && choice[0] <= 'Z')
 		{
@@ -526,19 +522,23 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				cout << "Niepoprawne dane. Prosze wpisac nazwe samolotu obecnego na planszy, ktory ma mozliwosc ruszenia sie o dana liczbe ruchow" << endl;
 				cin >> choice;
 			}
-			if (algorytm_losujacy(0, 100) <= probability) losuj_samolot(samolot);//tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
+			//if (algorytm_losujacy(0, 100) <= probability) losuj_samolot(samolot);//tu samolotowi powinna zostać przypisana wartość zmiennej [0,9] do opadania
 			wsk_plane = get_itterator_of_plane(samolot, choice[0]);
-			if (choice[1] == 'c') wsk_plane->command = 0;
-			else{
+			if (choice[1] == 'c') { 
+				wsk_plane->command = 0;
+				wsk_plane->deley = 0;
+			}
+			else {
 				if (choice[1] == '\\') wsk_plane->command = 1;
 				else if (choice[1] == '/') wsk_plane->command = 2;
-				wsk_plane->deley = choice[2];
+				wsk_plane->deley = choice[2]-'0';
 			}
-			
+
 		}
+		else cout << "Niepoprawna instrukcja!" << endl;
 		//system("cls");
 		make_turn(samolot, board);
-		fill_the_board(board, samolot);
+		//fill_the_board(board, samolot);
 		view_board(board);
 	} while (choice[0] != 112);
 }
