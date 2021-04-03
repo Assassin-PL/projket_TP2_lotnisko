@@ -131,7 +131,6 @@ int main()
 	setlocale(LC_CTYPE, "Polish");
 	array<array<Tile, COL>, ROW> board;
 	set_board(board);
-	//view_board(board);
 	list<Plane> samolot;
 	losuj_samolot(samolot);
 	fill_the_board(board, samolot);
