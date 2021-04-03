@@ -326,9 +326,10 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			wsk_plane->y += 1;
 			break;
 		}
+		//if (wsk_plane->deley == 0)wsk_plane->deley = 48;
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
-		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley + '0';
+		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley;
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -345,6 +346,7 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			board[wsk_plane->x][wsk_plane->y + 3] = '=';
 			break;
 		}
+		//if (wsk_plane->deley == 48)wsk_plane->deley = 0;
 	}
 	else
 	{
@@ -377,9 +379,10 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			wsk_plane->y -= 1;
 			break;
 		}
+		//if (wsk_plane->deley == 0)wsk_plane->deley = 48;
 		board[wsk_plane->x][wsk_plane->y] = wsk_plane->nazwa;
 		board[wsk_plane->x][wsk_plane->y - 1] = '(';
-		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley + '0';
+		board[wsk_plane->x][wsk_plane->y + 1] = wsk_plane->deley;
 		board[wsk_plane->x][wsk_plane->y + 2] = ')';
 		switch (wsk_plane->command)
 		{
@@ -396,6 +399,7 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 			board[wsk_plane->x][wsk_plane->y - 2] = '=';
 			break;
 		}
+		//if (wsk_plane->deley == 48)wsk_plane->deley = 0;
 	}
 }
 
