@@ -517,7 +517,7 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
 {
 	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
-		for (int i = 0; i < 3; i++)
+		for (int i = -2; i < 3; i++)
 		{
 			if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))
 			{
@@ -557,10 +557,12 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
 		getline(cin, choice);
-		if (is_collsision(samolot))
+		if (samolot.size() > 1)
 		{
-			choice[0] == 112;
-			break;
+			if (is_collsision(samolot))
+			{
+				break;
+			}
 		}
 		make_turn(samolot, board);
 		if (choice[0] == ' ')
