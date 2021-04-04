@@ -227,7 +227,7 @@ void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board)
 
 int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 {
-	if (tries < 1000000)// sprawdzanie czy nie nastapilo wiecej niz zalecane liczba losowan
+	if (tries < 10000)// sprawdzanie czy nie nastapilo wiecej niz zalecane liczba losowan
 	{
 		for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 		{
@@ -269,7 +269,7 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	{
 		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row][0 + i].tile_view != ' ')
+			if (board[which_row][0 + i].tile_view != ' '|| board[which_row + 1][0 + i].tile_view != ' '|| board[which_row-1][0 + i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -280,7 +280,7 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	{
 		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row][COL - 1 - i].tile_view != ' ')
+			if (board[which_row][COL - 1 - i].tile_view != ' '|| board[which_row+1][COL - 1 - i].tile_view != ' '|| board[which_row-1][COL - 1 - i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -604,7 +604,6 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				}
 
 			}
-
 		}
 		else cout << "Niepoprawna instrukcja!" << endl;
 		fill_the_board(board, samolot);
