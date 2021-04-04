@@ -532,6 +532,7 @@ bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)
 	return false;
 }
 
+
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
 	string choice;
@@ -617,3 +618,13 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 	cout << "Kolizjaaaa!!!!!" << endl;
 }
 //zastosowac clean coda zeby bylo ok
+//dodajemy samoloty na koncu(push_back), a usuwamy na poczatku(pop_front)
+//tworzymy nieskoczona petle programu
+//1 losujemy czy ma sie pojawic nowy samolot, globalna zmienna probalistyczna int (od 0 do 100) losujemy w randomie liczbe od 0 do 100 
+// i jesli wylosowana jest mniejsza od prob to losujemy samolot
+//2 losowanie czy ma sie samolot poruszac w lewo czy w prawo
+//3 loswanie na ktorym torze ma sie pojawic i zrobic if czy nie bedzie kolizji przy pojawieniu sie nowego samolotu 
+// i losowac az znajdzi sie miejsce w odleglosci 7 pol
+//4 logika zderzen dziala do 2 pol odleglosci, przelatuje forem po kazdym rzedzie i sprawdzam czy istnije taka sytuacja ze 
+//5 dodac do klasy atrybut oznaczajcy ile razy za wykonac dany rozkaz
+//6 zrobic logike jak doleci
