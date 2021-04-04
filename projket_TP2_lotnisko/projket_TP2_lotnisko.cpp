@@ -504,7 +504,7 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 		j--;
 		for (list<Plane>::iterator i = k; i != samolot.end(); ++i)//tu sprawdza plaina1 z kolejnymi plainami liczac od samsiada
 		{
-			if (check_priv_zone(j, i))//jesli funkcja zwroci true to znaczy ze nastapila kolizja
+			if (check_priv_zone(i, j))//jesli funkcja zwroci true to znaczy ze nastapila kolizja
 			{
 				return true;
 			}
@@ -516,7 +516,7 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
 {
 	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
-		for (int i = -2; i < 3; i++)
+		for (int i = -1; i < 2; i++)
 		{
 			if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))
 			{
@@ -608,6 +608,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		fill_the_board(board, samolot);
 		view_board(board);
 	} while (!is_collsision(samolot));
+
 	cout << "Kolizjaaaa!!!!!" << endl;
 }
 //zastosowac clean coda zeby bylo ok
