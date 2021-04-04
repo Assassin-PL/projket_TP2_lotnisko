@@ -512,7 +512,7 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 
 bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
 {
-	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
+	for (int j = 0; j < 6; j++)//standardowo sprawdza 2 pola od siebie
 		for (int i = -1; i < 2; i++)
 		{
 			if (plain2->direction == 1) {
