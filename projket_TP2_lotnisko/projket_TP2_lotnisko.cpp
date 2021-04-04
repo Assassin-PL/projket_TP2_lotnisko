@@ -136,7 +136,7 @@ int main()
 	set_board(board);
 	//view_board(board);
 	list<Plane> samolot;
-	losuj_samolot(samolot,board);
+	losuj_samolot(samolot, board);
 	fill_the_board(board, samolot);
 	cout << endl;
 	view_board(board);
@@ -218,7 +218,7 @@ void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board)
 	{
 		b = algorytm_losujacy(1, ROW - 2);
 		b = check_number(b, samolot, 0, d);
-		if (b > 0 && b < ROW - 2 && check_neigbours(c,b,board) )
+		if (b > 0 && b < ROW - 2 && check_neigbours(c, b, board))
 		{
 			obj1.set_plane(b, COL - 1, 0, 0, 0, check_name('A', samolot));
 			samolot.push_back(obj1);
@@ -270,7 +270,7 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	{
 		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row][0+i].tile_view != ' ')
+			if (board[which_row][0 + i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -281,7 +281,7 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	{
 		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row][COL-1-i].tile_view != ' ')
+			if (board[which_row][COL - 1 - i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -402,12 +402,11 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
 	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)// zaczynamy od zliczania kazdego samolotu
 	{
-		
+
 		if (i->direction == 1)//sprawdzamy w jakim kierunku nasz samolot leci, 1 oznacza ze leci w prawo
 		{
 			if (i->y + 8 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
 			{
-				cout << "cycki";
 				board[i->x][i->y] = ' ';
 				board[i->x][i->y - 1] = ' ';
 				board[i->x][i->y + 1] = ' ';
@@ -459,7 +458,7 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		}
 		//move_plain(samolot, board, i->nazwa);
 	}
-	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot,board);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
+	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot, board);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
 }
 
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
@@ -475,13 +474,13 @@ list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
 
 bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 	ile -= '0';
-	if ((ile > 9 || ile < 1) && gdzie!='c') return 0;
+	if ((ile > 9 || ile < 1) && gdzie != 'c') return 0;
 	for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 	{
 		if (i->nazwa == nazwa)
 		{
 			if (gdzie == '/' && i->x - ile < 1) {
-				cout << "Nie mozna przesunac sie o tyle pol w gore!"<<endl;
+				cout << "Nie mozna przesunac sie o tyle pol w gore!" << endl;
 				return 0;
 			}
 			else if (gdzie == '\\' && i->x + ile > ROW - 2) {
@@ -516,8 +515,8 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 
 bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
 {
-	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
-		for (int i = 0; i < 3; i++)
+	for (int j = 0; j < 5; j++)//standardowo sprawdza 2 pola od siebie
+		for (int i = 0; i < 5; i++)
 		{
 			if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))
 			{
@@ -557,11 +556,6 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
 		getline(cin, choice);
-		if (is_collsision(samolot))
-		{
-			choice[0] == 112;
-			break;
-		}
 		make_turn(samolot, board);
 		if (choice[0] == ' ')
 		{
@@ -576,7 +570,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				cin >> choice;
 			}
 			wsk_plane = get_itterator_of_plane(samolot, choice[0]);
-			if (choice[1] == 'c') { 
+			if (choice[1] == 'c') {
 				wsk_plane->command = 0;
 				wsk_plane->deley = 0;
 			}
@@ -604,7 +598,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 						board[wsk_plane->x][wsk_plane->y - 2] = '\\';
 					}
 				}
-				
+
 			}
 
 		}
@@ -613,7 +607,8 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		//make_turn(samolot, board);
 		fill_the_board(board, samolot);
 		view_board(board);
-	} while (choice[0] != 112);
+	} while (!is_collsision(samolot));
+	cout << "Kolizjaaaa!!!!!" << endl;
 }
 //zastosowac clean coda zeby bylo ok
 //dodajemy samoloty na koncu(push_back), a usuwamy na poczatku(pop_front)
