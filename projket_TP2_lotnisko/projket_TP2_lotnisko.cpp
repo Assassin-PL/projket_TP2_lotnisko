@@ -134,7 +134,6 @@ int main()
 	setlocale(LC_CTYPE, "Polish");
 	array<array<Tile, COL>, ROW> board;
 	set_board(board);
-	//view_board(board);
 	list<Plane> samolot;
 	losuj_samolot(samolot, board);
 	fill_the_board(board, samolot);
@@ -402,6 +401,7 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
 	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)// zaczynamy od zliczania kazdego samolotu
 	{
+
 		if (i->direction == 1)//sprawdzamy w jakim kierunku nasz samolot leci, 1 oznacza ze leci w prawo
 		{
 			if (i->y + 8 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
@@ -454,7 +454,6 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				move_plain(samolot, board, i->nazwa);
 			}
 		}
-		//move_plain(samolot, board, i->nazwa);
 	}
 	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot, board);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
 }
@@ -513,7 +512,7 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 
 bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
 {
-	for (int j = 0; j < 6; j++)//standardowo sprawdza 2 pola od siebie
+	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
 		for (int i = -1; i < 2; i++)
 		{
 			if (plain2->direction == 1) {
@@ -531,6 +530,7 @@ bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)
 		}
 	return false;
 }
+
 
 void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
@@ -565,7 +565,6 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		if (choice[0] == ' ')
 		{
 			cout << "Nastepna tura" << endl;
-			//i w tym momencie wszystkie samoloty powinny wykonać ruch do przodu, lub tak jak jeszcze im zostało
 		}
 		else if (choice[0] >= 'A' && choice[0] <= 'Z')
 		{
@@ -608,8 +607,6 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 
 		}
 		else cout << "Niepoprawna instrukcja!" << endl;
-		//system("cls");
-		//make_turn(samolot, board);
 		fill_the_board(board, samolot);
 		view_board(board);
 	} while (!is_collsision(samolot));
