@@ -433,7 +433,6 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		{
 			if (i->y - 8 == 0)
 			{
-				cout << "gówno";
 				board[i->x][i->y] = ' ';
 				board[i->x][i->y - 1] = ' ';
 				board[i->x][i->y + 1] = ' ';
