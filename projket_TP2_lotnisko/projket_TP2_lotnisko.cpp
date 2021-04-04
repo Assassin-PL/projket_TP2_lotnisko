@@ -145,9 +145,9 @@ int main()
 
 int algorytm_losujacy(int beg, int end)
 {
-	random_device rd; // obtain a random number from hardware
-	mt19937 gen(rd()); // seed the generator
-	uniform_int_distribution<> distr(beg, end); // define the range
+	random_device rd; 
+	mt19937 gen(rd()); 
+	uniform_int_distribution<> distr(beg, end); 
 
 	return distr(gen);
 }
@@ -246,7 +246,7 @@ int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 		}
 		return number;
 	}
-	else //jesli liczba prob przekroczy 10000000 to funkcja zwroci 0 i to spowoduje ze juz sie nie pojawi samolot
+	else //jesli liczba prob przekroczy 10000 to funkcja zwroci 0 i to spowoduje ze juz sie nie pojawi samolot
 	{
 		return 0;
 	}
@@ -269,7 +269,7 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	{
 		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row][0 + i].tile_view != ' '|| board[which_row + 1][0 + i].tile_view != ' '|| board[which_row-1][0 + i].tile_view != ' ')
+			if (board[which_row][0 + i].tile_view != ' ' || board[which_row + 1][0 + i].tile_view != ' ' || board[which_row - 1][0 + i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -280,7 +280,7 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	{
 		for (int i = 2; i < 7; i++)
 		{
-			if (board[which_row][COL - 1 - i].tile_view != ' '|| board[which_row+1][COL - 1 - i].tile_view != ' '|| board[which_row-1][COL - 1 - i].tile_view != ' ')
+			if (board[which_row][COL - 1 - i].tile_view != ' ' || board[which_row + 1][COL - 1 - i].tile_view != ' ' || board[which_row - 1][COL - 1 - i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -550,27 +550,26 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 
 		cout << "\n <znak samolotu> \\ <liczba 1-9> - nakaz opadania o podana liczbe pol";
 
-		cout << "\n <znak samolotu> = - lot stabilny";
-
 		cout << "\n <znak samolotu> c  anulowanie rozkazu";
 
-		cout << "\n Debug: p wyjscie";
-
-		cout << "\n Debug: cokolwiek k pokaz tablice";
-
 		cout << "\n  _____________________________ \n";
-		cout << "\n Enter selection: ";
+		cout << "\n Proszę wpisać komendę: ";
 		getline(cin, choice);
+		while ((choice[0] < 'A' || choice[0] > 'Z') && choice[0] != ' ') {
+			cout << "Niepoprawna instrukcja! Proszę wpisać instrukcję taką jak na liście." << endl;
+			getline(cin, choice);
+		}
+		system("cls");
 		make_turn(samolot, board);
 		if (choice[0] == ' ')
 		{
-			cout << "Nastepna tura" << endl;
+			cout << "Nastepna tura..." << endl;
 		}
 		else if (choice[0] >= 'A' && choice[0] <= 'Z')
 		{
 			while (!WpisPoprawny(samolot, choice[0], choice[1], choice[2]))
 			{
-				cout << "Niepoprawne dane. Prosze wpisac nazwe samolotu obecnego na planszy, ktory ma mozliwosc ruszenia sie o dana liczbe ruchow" << endl;
+				cout << "Niepoprawne dane. Proszę wpisać nazwę samolotu obecnego na planszy, który ma mozliwość ruszenia się o daną liczbę ruchów" << endl;
 				cin >> choice;
 			}
 			wsk_plane = get_itterator_of_plane(samolot, choice[0]);
@@ -605,11 +604,9 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 
 			}
 		}
-		else cout << "Niepoprawna instrukcja!" << endl;
 		fill_the_board(board, samolot);
 		view_board(board);
 	} while (!is_collsision(samolot));
 
-	cout << "Kolizjaaaa!!!!!" << endl;
+	cout << "Uwaga! Wystąpiła kolizja!" << endl;
 }
-//zastosowac clean coda zeby bylo ok
