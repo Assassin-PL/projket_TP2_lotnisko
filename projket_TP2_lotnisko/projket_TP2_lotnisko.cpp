@@ -497,17 +497,19 @@ bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 
 bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samolot czy nie wlecial w przestrzen prywatna innego samolotu
 {
+	list<Plane>::iterator k;
 	for (list<Plane>::iterator j = samolot.begin(); j != samolot.end(); ++j)//petla sprawdza czy priv zone plain1 pokrywa sie z priv zone plain2
 	{
-		j++;//o to tu w ty dziwactwie chodzi ze w nastepnym kroku algorytm sprawdzal sasiada, a nie samego siebie, bo by zawsze true zwrocil as to bylby blad w kodzie
-		for (list<Plane>::iterator i = j; i != samolot.end(); ++i)//tu sprawdza plaina1 z kolejnymi plainami liczac od samsiada
+		j++;
+		k = j;
+		j--;
+		for (list<Plane>::iterator i = k; i != samolot.end(); ++i)//tu sprawdza plaina1 z kolejnymi plainami liczac od samsiada
 		{
 			if (check_priv_zone(j, i))//jesli funkcja zwroci true to znaczy ze nastapila kolizja
 			{
 				return true;
 			}
 		}
-		j--;//te dziadostwo musi sie zdekrementowac tylko po to aby for sie inkrementowal pojedynczo a nie podwojnie
 	}
 	return false;//jesli zwroci false to znaczy ze nie wykryto kolizji @!!wada taka ze program sprawdza czy istnieje kolizja, ale nie wzkazuje miedz jakimi samolotami ona nastapila!!@
 }
@@ -555,6 +557,11 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		cout << "\n  _____________________________ \n";
 		cout << "\n Enter selection: ";
 		getline(cin, choice);
+		if (is_collsision(samolot))
+		{
+			choice[0] == 112;
+			break;
+		}
 		make_turn(samolot, board);
 		if (choice[0] == ' ')
 		{
