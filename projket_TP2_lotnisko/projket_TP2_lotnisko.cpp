@@ -514,17 +514,17 @@ bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samo
 
 bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
 {
-	for (int j = 0; j < 6; j++)//standardowo sprawdza 2 pola od siebie
-		for (int i = -2; i < 3; i++)
+	for (int j = 0; j < 3; j++)//standardowo sprawdza 2 pola od siebie
+		for (int i = -1; i < 2; i++)
 		{
 			if (plain2->direction == 1) {
-				if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))
+				if ((plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j))|| (plain2->x == (plain1->x + i) && plain2->y == (plain1->y + j)))
 				{
 					return true;//jesli ten if sie spelni to znaczy ze wszystkie istnije taka kombinacja samolotow ze sie zderzyly
 				}
 			}
 			else {
-				if (plain1->x == (plain2->x + i) && plain1->y == (plain2->y - j))
+				if ((plain1->x == (plain2->x + i) && plain1->y == (plain2->y - j)) || (plain2->x == (plain1->x + i) && plain2->y == (plain1->y - j)))
 				{
 					return true;//jesli ten if sie spelni to znaczy ze wszystkie istnije taka kombinacja samolotow ze sie zderzyly
 				}
