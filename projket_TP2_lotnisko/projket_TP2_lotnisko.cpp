@@ -14,8 +14,6 @@ class Tile
 {
 public:
 	char tile_view = ' ';
-	Tile(char new_tile);
-	~Tile();
 	void print_tile()
 	{
 		cout << tile_view;
@@ -24,27 +22,22 @@ public:
 	{
 		tile_view = tile_new;
 	}
+	Tile(char new_tile = ' ')
+	{
+		tile_view = new_tile;
+	}
+	~Tile()
+	{
+	}
 private:
 
 };
-
-Tile::Tile(char new_tile = ' ')
-{
-	tile_view = new_tile;
-}
-
-Tile::~Tile()
-{
-}
-
 class Plane
 {
 public:
 	int x, y, deley, command;
 	bool direction;
 	char nazwa;
-	Plane(int row_value, int column_value, int plain_value_of_deley, int set_command, bool flight_direction, char name_of_plain);
-	~Plane();
 	void set_plane(int row_value, int column_value, int plain_value_of_deley, int set_command, bool flight_direction, char name_of_plain)
 	{
 		if (row_value >= 0 && row_value < ROW)
@@ -75,44 +68,16 @@ public:
 		direction = flight_direction;
 		nazwa = name_of_plain;
 	}
+	Plane(int row_value, int column_value, int plain_value_of_deley, int set_command, bool flight_direction, char name_of_plain)
+	{
+		set_plane(row_value, column_value, plain_value_of_deley, set_command, flight_direction, name_of_plain);
+	}
+	~Plane()
+	{
+	}
 private:
 
 };
-
-Plane::Plane(int row_value, int column_value, int plain_value_of_deley, int set_command, bool flight_direction, char name_of_plain)
-{
-	if (row_value >= 0 && row_value < ROW)
-	{
-		x = row_value;
-	}
-	else
-	{
-		x = 0;
-	}
-	if (column_value >= 0 && column_value < COL)
-	{
-		y = column_value;
-	}
-	else
-	{
-		y = 0;
-	}
-	deley = plain_value_of_deley;
-	if (set_command == 0 || set_command == 1 || set_command == 2)
-	{
-		command = set_command;
-	}
-	else
-	{
-		command = 0;
-	}
-	direction = flight_direction;
-	nazwa = name_of_plain;
-}
-
-Plane::~Plane()
-{
-}
 
 void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board);
 void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board);
@@ -206,7 +171,7 @@ void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board)
 	if (c == 1)
 	{
 		a = algorytm_losujacy(1, ROW - 2);
-		a = check_number(a, samolot, 1, d);//jesli zostanie zwrocone 0 to znaczy ze nie moze sie pojawic nowy samolot na hangarze
+		a = check_number(a, samolot, 1, d);
 		if (a > 0 && a < ROW - 2 && check_neigbours(c, a, board))
 		{
 			obj1.set_plane(a, 0, 0, 0, 1, check_name('A', samolot));
@@ -227,14 +192,14 @@ void losuj_samolot(list<Plane>& samolot, array<array<Tile, COL>, ROW> board)
 
 int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 {
-	if (tries < 10000)// sprawdzanie czy nie nastapilo wiecej niz zalecane liczba losowan
+	if (tries < 10000)
 	{
 		for (list<Plane>::const_iterator i = samolot.begin(); i != samolot.end(); ++i)
 		{
 			if (i->x == number && direction == 1 && i->y == 0)
 			{
 				number = algorytm_losujacy(1, ROW - 2);
-				tries++;//za kazdym razem wylosowania nowej liczby zwieksza sie liczba tries
+				tries++;
 				number = check_number(number, samolot, direction, tries);
 			}
 			if (i->x == number && direction == 0 && i->y == COL - 1)
@@ -246,7 +211,7 @@ int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 		}
 		return number;
 	}
-	else //jesli liczba prob przekroczy 10000 to funkcja zwroci 0 i to spowoduje ze juz sie nie pojawi samolot
+	else 
 	{
 		return 0;
 	}
@@ -254,14 +219,14 @@ int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 
 char check_name(char name, list<Plane>& samolot)
 {
-	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)// funkcja sprawdza po kazdyym elemencie samolotu czy jest zarezerwowana taka nazwa
-	{// kod sie zaczyna od pierwszej litery zapisanej w liscie samolotow
+	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)
+	{
 		if (i->nazwa == name)
 		{
-			name += 1;//jesli tak to inkrementiuje literke podana do funkcji
+			name += 1;
 		}
 	}
-	return name;//jesli lista jest pusta i for nie moze sie wykonac to wtedy jest zwracana podana podana literka
+	return name;
 }
 bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW> board)
 {
@@ -399,36 +364,34 @@ void move_plain(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board, char 
 
 void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 {
-	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)// zaczynamy od zliczania kazdego samolotu
+	for (list<Plane>::iterator i = samolot.begin(); i != samolot.end(); ++i)
 	{
 
-		if (i->direction == 1)//sprawdzamy w jakim kierunku nasz samolot leci, 1 oznacza ze leci w prawo
+		if (i->direction == 1)
 		{
-			if (i->y + 8 == COL)//jesli samolotowi leczosemu w prawo zostana 2 pola do konca tablicy to znaczy ze samolot wykonal ruch
+			if (i->y + 8 == COL)
 			{
 				board[i->x][i->y] = ' ';
 				board[i->x][i->y - 1] = ' ';
 				board[i->x][i->y + 1] = ' ';
 				board[i->x][i->y + 2] = ' ';
 				board[i->x][i->y - 2] = ' ';
-				i = samolot.erase(i);//funkcja zajmujaca sie kasowaniem samolotu zaznacznego itteratorem i
+				i = samolot.erase(i);
 			}
 			else
 			{
-				if (i->deley > 0 && i->deley < 10)//funkcja liczaca opoznienie, jesli zwroci prawde to bedzie sie poruszalo w kierunku command
+				if (i->deley > 0 && i->deley < 10)
 				{
-					//move_plain(samolot, board, i->nazwa);
 					i->deley--;
 				}
-				else//jesli nie to defultowo jest zaznaczone ze samolot leci lotem prostym
+				else
 				{
 					i->command = 0;
-					//move_plain(samolot, board, i->nazwa);
 				}
 				move_plain(samolot, board, i->nazwa);
 			}
 		}
-		else//to samo co powyzej tylko dla lewej strony
+		else
 		{
 			if (i->y - 8 == 0)
 			{
@@ -443,19 +406,17 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 			{
 				if (i->deley > 0 && i->deley < 10)
 				{
-					//move_plain(samolot, board, i->nazwa);
 					i->deley--;
 				}
 				else
 				{
 					i->command = 0;
-					//move_plain(samolot, board, i->nazwa);
 				}
 				move_plain(samolot, board, i->nazwa);
 			}
 		}
 	}
-	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot, board);//po kazdym ruchu jest inicjalizacja pojawienia sie samolotu
+	if (algorytm_losujacy(0, 100) <= probability)losuj_samolot(samolot, board);
 }
 
 list<Plane>::iterator get_itterator_of_plane(list<Plane>& samolot, char nazwa)
@@ -491,40 +452,40 @@ bool WpisPoprawny(list<Plane>& samolot, char nazwa, char gdzie, int ile) {
 	return 0;
 }
 
-bool is_collsision(list<Plane>& samolot)//jakby co program sprawdza !kazdy! samolot czy nie wlecial w przestrzen prywatna innego samolotu
+bool is_collsision(list<Plane>& samolot)
 {
 	list<Plane>::iterator k;
-	for (list<Plane>::iterator j = samolot.begin(); j != samolot.end(); ++j)//petla sprawdza czy priv zone plain1 pokrywa sie z priv zone plain2
+	for (list<Plane>::iterator j = samolot.begin(); j != samolot.end(); ++j)
 	{
 		j++;
 		k = j;
 		j--;
-		for (list<Plane>::iterator i = k; i != samolot.end(); ++i)//tu sprawdza plaina1 z kolejnymi plainami liczac od samsiada
+		for (list<Plane>::iterator i = k; i != samolot.end(); ++i)
 		{
-			if (check_priv_zone(i, j))//jesli funkcja zwroci true to znaczy ze nastapila kolizja
+			if (check_priv_zone(i, j))
 			{
 				return true;
 			}
 		}
 	}
-	return false;//jesli zwroci false to znaczy ze nie wykryto kolizji @!!wada taka ze program sprawdza czy istnieje kolizja, ale nie wzkazuje miedz jakimi samolotami ona nastapila!!@
+	return false;
 }
 
-bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)//to jest funkcja pomocnicza do priv'a zeby ogarnac tego priv zone'a
+bool check_priv_zone(list<Plane>::iterator plain1, list<Plane>::iterator plain2)
 {
-	for (int j = 0; j < 6; j++)//standardowo sprawdza 2 pola od siebie
+	for (int j = 0; j < 6; j++)
 		for (int i = -1; i < 2; i++)
 		{
 			if (plain2->direction == 1) {
 				if ((plain1->x == (plain2->x + i) && plain1->y == (plain2->y + j)) || (plain2->x == (plain1->x + i) && plain2->y == (plain1->y + j)))
 				{
-					return true;//jesli ten if sie spelni to znaczy ze wszystkie istnije taka kombinacja samolotow ze sie zderzyly
+					return true;
 				}
 			}
 			else {
 				if ((plain1->x == (plain2->x + i) && plain1->y == (plain2->y - j)) || (plain2->x == (plain1->x + i) && plain2->y == (plain1->y - j)))
 				{
-					return true;//jesli ten if sie spelni to znaczy ze wszystkie istnije taka kombinacja samolotow ze sie zderzyly
+					return true;
 				}
 			}
 		}
