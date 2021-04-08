@@ -8,7 +8,7 @@ using namespace std;
 
 const int ROW = 10;
 const int COL = 100;
-const int probability = 50;
+const int probability = 30;
 
 class Tile
 {
@@ -110,9 +110,9 @@ int main()
 
 int algorytm_losujacy(int beg, int end)
 {
-	random_device rd; 
-	mt19937 gen(rd()); 
-	uniform_int_distribution<> distr(beg, end); 
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(beg, end);
 
 	return distr(gen);
 }
@@ -211,7 +211,7 @@ int check_number(int number, list<Plane>& samolot, bool direction, int& tries)
 		}
 		return number;
 	}
-	else 
+	else
 	{
 		return 0;
 	}
@@ -232,9 +232,9 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 {
 	if (direction == 1)
 	{
-		for (int i = 2; i < 7; i++)
+		for (int i = 2; i < 6; i++)
 		{
-			if (board[which_row][0 + i].tile_view != ' ' || board[which_row + 1][0 + i].tile_view != ' ' || board[which_row - 1][0 + i].tile_view != ' ')
+			if (board[which_row][i].tile_view != ' ' || board[which_row + 1][i].tile_view != ' ' || board[which_row - 1][i].tile_view != ' ')
 			{
 				return false;
 			}
@@ -243,7 +243,7 @@ bool check_neigbours(bool direction, int which_row, array<array<Tile, COL>, ROW>
 	}
 	else
 	{
-		for (int i = 2; i < 7; i++)
+		for (int i = 2; i < 6; i++)
 		{
 			if (board[which_row][COL - 1 - i].tile_view != ' ' || board[which_row + 1][COL - 1 - i].tile_view != ' ' || board[which_row - 1][COL - 1 - i].tile_view != ' ')
 			{
@@ -375,7 +375,7 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 				board[i->x][i->y - 1] = ' ';
 				board[i->x][i->y + 1] = ' ';
 				board[i->x][i->y + 2] = ' ';
-				board[i->x][i->y - 2] = ' ';
+				board[i->x][i->y + 3] = ' ';
 				i = samolot.erase(i);
 			}
 			else
@@ -393,13 +393,13 @@ void make_turn(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 		}
 		else
 		{
-			if (i->y - 8 == 0)
+			if (i->y - 7 == 0)
 			{
 				board[i->x][i->y] = ' ';
 				board[i->x][i->y - 1] = ' ';
 				board[i->x][i->y + 1] = ' ';
 				board[i->x][i->y + 2] = ' ';
-				board[i->x][i->y + 3] = ' ';
+				board[i->x][i->y - 2] = ' ';
 				i = samolot.erase(i);
 			}
 			else
@@ -520,7 +520,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 			cout << "Niepoprawna instrukcja! Proszę wpisać instrukcję taką jak na liście." << endl;
 			getline(cin, choice);
 		}
-		system("cls");
+		
 		make_turn(samolot, board);
 		if (choice[0] == ' ')
 		{
@@ -565,6 +565,7 @@ void menu(list<Plane>& samolot, array<array<Tile, COL>, ROW>& board)
 
 			}
 		}
+		system("cls");
 		fill_the_board(board, samolot);
 		view_board(board);
 	} while (!is_collsision(samolot));
